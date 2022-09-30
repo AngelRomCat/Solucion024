@@ -1,0 +1,74 @@
+﻿@model _04_Data.Data.Empleado
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Empleado</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.birthDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.birthDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Photo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Photo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Notes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.EmployeeID }) |
+    @Html.ActionLink("Back to List", "Index")
+    <br />
+    @Html.ActionLink("Details", "Details", new { id = Model.EmployeeID })
+    <br />
+    @*4.2.2.3.1	Sin Ajax fácil*@
+    @if (Model.EmployeeID > 1)
+    {
+        @Html.ActionLink("Anterior", "Details", new { id = Model.EmployeeID - 1 })
+    }
+    @*4.2.2.3.2	Sin Ajax difícil*@
+    @if (Model.EmployeeID < 11)
+    {
+        @Html.ActionLink("Siguiente", "Details", new { id = Model.EmployeeID + 1 })
+    }
+    @Html.ActionLink("Anterior", "Details", new { id = Model.EmployeeID, siguiente = false }, null) |
+    @Html.ActionLink("Siguiente", "Details", new { id = Model.EmployeeID, siguiente = true }, null)
+
+</p>

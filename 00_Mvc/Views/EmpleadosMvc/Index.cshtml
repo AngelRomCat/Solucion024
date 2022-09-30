@@ -1,0 +1,118 @@
+﻿@model IEnumerable<_04_Data.Data.Empleado>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">  @*style="border:1px solid black;">*@
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.LastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.birthDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Photo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Notes)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.birthDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Photo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Notes)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.EmployeeID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.EmployeeID }) |
+                @Html.ActionLink("DetailsAjax", "DetailsAjax", new { id = item.EmployeeID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.EmployeeID }) |
+                @{
+                    string onClick = "miAjaxMvc(" + item.EmployeeID + ")";
+                    string param = "EmpleadoMvcPartialView" + item.EmployeeID;
+                }
+                <input type="button" value="Detalle" onclick=@onClick>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td id=@param colspan="6" class="miClase"></td>
+        </tr>
+
+    }
+
+</table>
+
+<div id="EmpleadoMvcPartialView"></div>
+
+<script type="text/javascript">
+    function miAjaxMvc(param) {
+        var apiUrl = 'https://localhost:44334/Api/Empleados/';
+
+        if (param > 0) {
+            apiUrl = apiUrl + "/" + param;
+            //llamamos a un objeto de la librería jQuery y le pasamos la apiUrl
+            $.ajax(
+                {
+                    //parámetros de configuración del objeto Ajax de jQuery
+                    type: "GET", //HTTP GET Method
+                    url: apiUrl//, // Controller/View
+                    //data: No es necesario: Es GET
+                    //el objeto nos muestra lo que le ha devuelto la api como parámetro: "res"
+                }).done(function (res) {
+                    //Enviamos el jSon "res" al EmpleadosMvcController
+                    //método: _EmpleadoMvcPartialView(res)
+                    var idEmpleado = '#EmpleadoMvcPartialView' + param;
+                    $.ajax(
+                        {
+                            type: "POST", //HTTP POST Method
+                            //url: "../_EmpleadoMvcPartialView", // Controller/View
+                            url: "_EmpleadoMvcPartialView", // Controller/View
+                            data: res
+                            //Nos devuelve una respuesta "resDeLaRes"
+                            //Que es un string con el html de la vista _EmpleadoMvcPartialView
+                        }).done(function (resDeLaRes) {
+                            //Borramos lo que pueda haber en todos los div de la Class = miClase
+                            $('.miClase').empty();
+                            //Cargamos la Vista Html dentro del <div>
+                            //$('#EmpleadoMvcPartialView').empty().append(resDeLaRes);
+                            $(idEmpleado).empty().append(resDeLaRes);
+                        }).fail(function (resDeLaRes) {
+                            console.log(resDeLaRes);
+                        }).always(function (resDeLaRes) {
+                            console.log(resDeLaRes);
+                        });
+                }).fail(function (res) {
+                    console.log(res);
+                }).always(function (res) {
+                    console.log(res);
+                });
+        }
+    }
+</script>
